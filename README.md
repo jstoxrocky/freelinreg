@@ -20,12 +20,12 @@ The FOMLRP accepts model specifications in the same way that EViews does.
 Logarithms of data and exponents are currently supported. Lags are not currently supported.
 
 For example, if your data looks like this:
-    y  gdp  cap
-0   1    2    5
-1   2    3    9
-2   8    7    2
-3   3    4    7
-...
+        y  gdp  cap
+    0   1    2    5
+    1   2    3    9
+    2   8    7    2
+    3   3    4    7
+    ...
 any of the following specifications are admissible:
 
 y c gdp cap
