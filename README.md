@@ -22,10 +22,10 @@ constant term. Logarithms of data and exponents are currently supported. Lags ar
 For example, if your data looks like this:
 
         y  gdp  cap
-    0   1    2    5
-    1   2    3    9
-    2   8    7    2
-    3   3    4    7
+    1   1    2    5
+    2   2    3    9
+    3   8    7    2
+    4   3    4    7
     ...
     
 any of the following specifications are admissible:
