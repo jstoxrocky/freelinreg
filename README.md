@@ -30,13 +30,16 @@ For example, if your data looks like this:
     
 any of the following specifications are admissible:
 
-y c gdp cap
+        y c gdp cap
 
-y gdp c cap
 
-y c log(gdp) cap cap^2
+        y gdp c cap
 
-y c cap^7
+
+        y c log(gdp) cap cap^2
+
+
+        y c cap^7
 
 **********************************************************************************************************************
 STEP 2: Further estimation and hypothesis testing
