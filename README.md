@@ -42,12 +42,33 @@ any of the following specifications are admissible:
 STEP 3: Further estimation and hypothesis testing
 **********************************************************************************************************************
 
+3.1 Wald Test
 
-Wald Test
+The FOMLRP allows for simple hypothesis testing via the Wald Test. Testing can be performed by entering the restrictions
+in the appropriate model's Wald Test text area, separating individual restrictions with commas.
 
-Plot
+        var_1 = value_1, var_2 = value_2, ...
 
-Residuals:
+For example, assume the following model is estimated:
+
+        y c gdp cap
+        
+The followign Wald Tests are all admissible:
+
+        gdp=0, cap=0
+
+        gdp=0
+
+        c=0, gdp=0, cap=0
+
+        c=0
+        
+3.2 Plot
+
+The actual series and fitted model series can be plotted. Simply click on the Plot button in the appropriate model window
+and you're done!
+
+3.3 Residuals:
 
 Obtaining residuals is easy. Residuals from each model are stored and can be accessed in model estimation. 
 For example residuals from the first eq_1 are accessed by the variable "res_eq_1", and from the second estimated equation
