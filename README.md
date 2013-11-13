@@ -51,15 +51,15 @@ in the appropriate model's Wald Test text area, separating individual restrictio
 
 For example, assume the following model is estimated:
 
-        y c gdp cap
+        log(y) c gdp^2 cap
         
 The followign Wald Tests are all admissible:
 
-        gdp=0, cap=0
+        gdp^2=0, cap=0
 
-        gdp=0
+        gdp^2=0
 
-        c=0, gdp=0, cap=0
+        c=0, gdp^2=0, cap=0
 
         c=0
         
