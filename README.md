@@ -9,8 +9,7 @@ Help:
 STEP 1: Uploading your data
 **********************************************************************************************************************
 
-The FOMLRP can currently only accept data in the form of csv files. 
-To convert excel (xls) files to csv, see this video: https://www.youtube.com/watch?v=SalyolC6jKM
+The FOMLRP only accepts data in the form of xls, or csv files. 
 
 **********************************************************************************************************************
 STEP 2: Estimating your model
