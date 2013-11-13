@@ -39,5 +39,26 @@ any of the following specifications are admissible:
         y c cap^7
 
 **********************************************************************************************************************
-STEP 2: Further estimation and hypothesis testing
+STEP 3: Further estimation and hypothesis testing
 **********************************************************************************************************************
+
+
+Wald Test
+
+Plot
+
+Residuals:
+
+Obtaining residuals is easy. Residuals from each model are stored and can be accessed in model estimation 
+by calling "res_eq_<model number>". For example residuals from the first eq_1 are accessed by the variable "res_eq_1".
+
+Likewise, a Hausman test can be performed as follows:
+
+Say eq_1 is:
+
+        y c gdp cap
+        
+After this model is estimated, a Hausman test can be performed as:
+
+        res_eq_1^2 c gdp cap
+
