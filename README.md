@@ -49,16 +49,17 @@ Plot
 
 Residuals:
 
-Obtaining residuals is easy. Residuals from each model are stored and can be accessed in model estimation 
-by calling "res_eq_<model number>". For example residuals from the first eq_1 are accessed by the variable "res_eq_1".
+Obtaining residuals is easy. Residuals from each model are stored and can be accessed in model estimation. 
+For example residuals from the first eq_1 are accessed by the variable "res_eq_1", and from the second estimated equation
+by calling "res_eq_2".
 
 Likewise, a Hausman test can be performed as follows:
 
-Say eq_1 is:
+Say eq_1 is estimated as:
 
         y c gdp cap
         
-After this model is estimated, a Hausman test can be performed as:
+After estimation, the residuals are available and a Hausman test can be performed by estimating:
 
         res_eq_1^2 c gdp cap
 
