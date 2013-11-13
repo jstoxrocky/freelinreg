@@ -52,7 +52,7 @@ For example, assume the following model is estimated:
 
         log(y) c gdp^2 cap
         
-The followign Wald Tests are all admissible:
+The following Wald Tests are all admissible:
 
         gdp^2=0, cap=0
 
