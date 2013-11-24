@@ -50,7 +50,7 @@ STEP 3: Further estimation and hypothesis testing
 The FOMLRP allows for simple hypothesis testing via the Wald Test. Testing can be performed by entering the restrictions
 in the appropriate model's Wald Test text area, separating individual restrictions with commas.
 
-        var_1 = value_1, var_2 = value_2, ...
+        x11 = <some value>, x2 = <some value>, x3 = <some value>, ...
 
 For example, assume the following model is estimated:
 
@@ -80,15 +80,15 @@ Similalrly, residulas from the second estimated equation are accessed by calling
 
 A Hausman Test can be performed using the residuals from a previously estimated equation. 
 
-        res_eq_<equation number>^2 c gdp cap
+        res_eq_<equation number>^2 x1 x2 x3...
 
-If you model is estimated as:
+For example, if your first model is estimated as:
 
         y c gdp cap
         
 Post estimation, the residuals are available and a Hausman test can be performed by estimating:
 
-        res_eq_<num>^2 c gdp cap
+        res_eq_1^2 c gdp cap
 
 
 **********************************************************************************************************************
