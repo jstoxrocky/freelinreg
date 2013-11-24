@@ -78,15 +78,17 @@ Similalrly, residulas from the second estimated equation are accessed by calling
 
 3.4 Hausman Test:
 
-A Hausman Test can be performed using the residuals from a previously estimated equation.       
+A Hausman Test can be performed using the residuals from a previously estimated equation. 
 
-If eq_1 is estimated as:
+        res_eq_<equation number>^2 c gdp cap
+
+If you model is estimated as:
 
         y c gdp cap
         
 Post estimation, the residuals are available and a Hausman test can be performed by estimating:
 
-        res_eq_1^2 c gdp cap
+        res_eq_<num>^2 c gdp cap
 
 
 **********************************************************************************************************************
