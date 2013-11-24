@@ -50,7 +50,7 @@ STEP 3: Further estimation and hypothesis testing
 The FOMLRP allows for simple hypothesis testing via the Wald Test. Testing can be performed by entering the restrictions
 in the appropriate model's Wald Test text area, separating individual restrictions with commas.
 
-        x11 = <some value>, x2 = <some value>, x3 = <some value>, ...
+        x1 = <some value>, x2 = <some value>, x3 = <some value>, ...
 
 For example, assume the following model is estimated:
 
