@@ -16,6 +16,8 @@ The FOMLRP only accepts data in .xls, .xlsx, or .csv files.
 STEP 2: Estimating your model
 **********************************************************************************************************************
 
+2.1 Cross-sectional or Time-series data:
+
 The FOMLRP accepts model specifications in the same way that EViews does. The dependent variable must always be first
 in the model specificantions. The variable 'c' is always used as the constant term, and the variable 't' is always 
 used as the time trend (the time trend currently does not support panel data). The position of 'c' and 't' do not matter,
@@ -40,6 +42,26 @@ any of the following specifications are admissible:
         log(y) c log(y)(-1) log(gdp) t cap cap^2
 
         y c cap^7
+
+2.2 Panel or Pooled Cross-sectional data:
+
+The FOMLRP currently supports estimation of panel and pooled cross-sectional in the following way. Estimation of models spanning accross time periods and cross sections can cause problems for time trends and lagged variables. For this reason, extra caution must be used when mixing these variable with this type of data. To let the FOMLRP know that you are using data spanning both time and cross sections, the number of time periods associated with cross sections must be specified in square brackets at the end of the model specification.
+
+    y x1 x2 x3 ... [time_periods]
+
+For example, using the above data set, assume we have data spanning 4 countries and 10 time periods for each country, and that we wish to estimate the following model:
+
+    y c gdp cap t
+
+To let the FOMLRP know that we would like the time trend 't' to range from 1-10 for each country (and not 1-40 accross all countries) we specify the model as follows:
+
+    y c gdp cap t [10]
+    
+Similarly, when using lagged variables with Panel or Pooled Cross Sectional data, you must also specify the number of time periods:
+
+    log(y) c gdp cap log(y)(-1) [10]
+    
+It is not necessary to specify the number of time periods when using pure time series data.
 
 **********************************************************************************************************************
 STEP 3: Further estimation and hypothesis testing
