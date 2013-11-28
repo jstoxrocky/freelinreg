@@ -16,7 +16,7 @@ The FOMLRP only accepts data in .xls, .xlsx, or .csv files.
 STEP 2: Estimating your model
 **********************************************************************************************************************
 
-2.1 Cross-sectional or Time-series data:
+2.1 Cross-sectional and Time-series data:
 
 The FOMLRP accepts model specifications in the same way that EViews does. The dependent variable must always be first
 in the model specificantions. The variable 'c' is always used as the constant term, and the variable 't' is always 
@@ -43,7 +43,7 @@ any of the following specifications are admissible:
 
         y c cap^7
 
-2.2 Panel or Pooled Cross-sectional data:
+2.2 Panel and Pooled Cross-sectional data:
 
 The FOMLRP currently supports estimation of panel and pooled cross-sectional in the following way. Estimation of models spanning accross time periods and cross sections can cause problems for time trends and lagged variables. For this reason, extra caution must be used when mixing these variable with this type of data. To let the FOMLRP know that you are using data spanning both time and cross sections, the number of time periods associated with cross sections must be specified in square brackets at the end of the model specification.
 
