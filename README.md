@@ -42,6 +42,8 @@ any of the following specifications are admissible:
         log(y) c log(y)(-1) log(gdp) t cap cap^2
 
         y c cap^7
+        
+        y c gdp*cap
 
 2.2 Panel and Pooled Cross-sectional data:
 
@@ -62,6 +64,16 @@ Similarly, when using lagged variables with Panel or Pooled Cross Sectional data
     log(y) c gdp cap log(y)(-1) [10]
     
 It is not necessary to specify the number of time periods when using pure time series data.
+
+2.3 Interaction terms
+
+Interaction terms are possible with the FOMLRP. Simply insert an asterix between two variable names to create a new interaction variable.
+
+    y x1 x1*x2
+    
+For example, If our data set is as above, we can create an interaction term equal to the product of 'gdp' and 'cap' and use it in our model specifications:
+
+    y c gdp*cap
 
 **********************************************************************************************************************
 STEP 3: Further estimation and hypothesis testing
