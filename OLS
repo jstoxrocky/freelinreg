@@ -1,0 +1,400 @@
+import numpy as np
+import scipy as sp
+import scipy.stats
+
+from data_ready import generate
+
+class OLS:
+
+    #stuff here is common to ALL OLS models
+    res_dic = {}
+
+    def __init__(self,data,raw_spec,model_count):
+                        
+            #update counters
+            self.wald_count = 0
+            self.plot_count = 0
+            self.plot_res_count = 0
+            self.model_count = model_count + 1
+            
+            #call generate function to put data in form we need
+            [y, x, data, reg_list, exp_list, dep, c_pos] = generate(data,raw_spec,self.res_dic)
+            
+            self.c_pos = c_pos
+            self.y = y
+            self.x = x
+            self.data = data
+            self.reg_list = reg_list
+            self.exp = exp_list
+            self.dep = dep
+            
+
+    def calc_ols(self):
+        
+        #calculate coefficients
+        beta = (self.x.T*self.x).I*self.x.T*self.y
+        
+        #calculate residuals
+        u = self.y - self.x*beta
+        
+        #calculate degrees of freedom
+        n = len(self.y)
+        k = len(self.x.T)
+        df = n - k
+        
+        #calculate SSR
+        #need to put 1x1 matrix as float or else cannot multiple
+        #since dimensions won't match
+        u_2 = float(u.T*u/df)
+        
+        #calculate design matrix
+        design = u_2*((self.x.T*self.x).I)
+        
+        #calculate standard errors
+        stn_err_raw = np.power(design, 0.5)
+        #put standard errors into correct dimensions
+        stn_err = []
+        for i in range(k):
+            stn_err.append(stn_err_raw[i,i])
+        stn_err = np.mat(stn_err).T
+        
+        #calculate t-stats
+        t_stat = (beta - 0)/stn_err
+        
+        #calculate p-values
+        p_val = []
+        for i in range(k):
+            p_val.append(2*(1 - sp.stats.t.cdf(np.absolute(t_stat[i,0]),df)))
+        p_val = np.mat(p_val).T
+        
+        #calculate confidence intervals
+        t_conf = sp.stats.t.ppf(0.975,df)
+        
+        #low
+        conf_low = []
+        for i in range(k):
+            conf_low.append(beta[i,0] - stn_err[i,0]*t_conf)
+        conf_low = np.mat(conf_low).T
+        
+        #high
+        conf_hi = []
+        for i in range(k):
+            conf_hi.append(beta[i,0] + stn_err[i,0]*t_conf)
+        conf_hi = np.mat(conf_hi).T
+        
+        y_hat = self.x*beta
+        
+        #calculate residuals and add to res_dic
+        res = self.y - y_hat
+        #res_name = 
+        self.res_dic['res_eq_%i' %self.model_count] = res
+
+        
+        #Rsquare
+        TSS = 0
+        for i in self.y:
+            TSS = TSS + np.power(i - np.average(self.y), 2)
+
+        RSS = 0
+        diff = self.y - y_hat
+        for i in diff:
+            RSS = RSS + np.power(i, 2)
+        
+        R2 = 1 - (RSS/TSS)
+        
+        a1 = (float(n - 1))/(float(n - k))
+        AR2 = 1 - (1 - R2)*a1
+        
+        
+        
+        #F
+        #R = np.mat([[0, 1, 0],[0, 0, 1]])
+        #q = np.mat([[0],[0]])
+        
+        
+        
+        R = np.eye(k)
+        #axis=0 is rows
+        #axis=1 is cols
+        
+        #need the conditionals,for the case when only regressor is c
+        if k > 1:
+            R = np.delete(R,self.c_pos,axis=0)
+            q = np.zeros((k - 1,1))
+        else:
+            q = np.zeros((k,1))
+
+        Rbetaq = R*beta - q
+            
+        sRXXR = u_2*R*(self.x.T*self.x).I*R.T
+        
+        
+        
+        W = Rbetaq.T*sRXXR.I*Rbetaq
+        #minus1 no c
+        F = W/(k - 1)
+        
+        #beta, u, n,k, df, u_2, design, stn_err_raw, stn_err, t_stat, p_val
+        #conf_low, conf_hi, y_hat, R2, AR2, F
+        
+        self.beta = beta
+        self.u = u
+        self.n = n
+        self.k = k
+        self.u_2 = u_2
+        self.design = design
+        self.stn_err_raw = stn_err_raw
+        self.stn_err = stn_err
+        self.t_stat = t_stat
+        self.p_val = p_val
+        self.conf_low = conf_low
+        self.conf_hi = conf_hi
+        self.y_hat = y_hat
+        self.R2 = R2
+        self.AR2 = AR2
+        self.F = F
+        self.res = res
+        
+
+        
+    def output(self):
+        '''takes output and
+        ---------------------
+        prints dataframe of output'''
+        
+        beta = self.beta
+        stn_err = self.stn_err
+        t_stat = self.t_stat
+        p_val = self.p_val
+        conf_low = self.conf_low
+        conf_hi = self.conf_hi
+        
+        #round numbers
+        beta = np.around(beta, decimals = 4)
+        stn_err = np.around(stn_err, decimals = 4)
+        t_stat = np.around(t_stat, decimals = 4)
+        p_val = np.around(p_val, decimals = 4)
+        conf_low = np.around(conf_low, decimals = 4)
+        conf_hi = np.around(conf_hi, decimals = 4)
+        
+
+        
+        if beta.shape[0] == 1:
+            self.exp = np.array(self.exp)
+            
+            beta = np.squeeze(np.asarray(beta))
+            stn_err = np.squeeze(np.asarray(stn_err))
+            t_stat = np.squeeze(np.asarray(t_stat))
+            p_val = np.squeeze(np.asarray(p_val))
+            conf_low = np.squeeze(np.asarray(conf_low))
+            conf_hi = np.squeeze(np.asarray(conf_hi))            
+            
+            MM = np.mat([beta, stn_err, t_stat, p_val, conf_low, conf_hi])
+        else:
+            self.exp = np.array(self.exp)
+            
+            beta = np.squeeze(np.asarray(beta))
+            stn_err = np.squeeze(np.asarray(stn_err))
+            t_stat = np.squeeze(np.asarray(t_stat))
+            p_val = np.squeeze(np.asarray(p_val))
+            conf_low = np.squeeze(np.asarray(conf_low))
+            conf_hi = np.squeeze(np.asarray(conf_hi))
+            
+            
+            
+            MM = np.mat([beta, stn_err, t_stat, p_val, conf_low, conf_hi]).T
+
+
+        #return MM, self.R2, self.AR2, self.n, self.F, self.exp, self.dep, self.res  
+        return MM, self.R2, self.AR2, self.n, self.F, self.exp, self.dep   
+        
+        
+        
+    def calc_wald(self,raw_spec):
+        
+        #ERROR HANDLING 1 (remove spaces)
+        raw_spec = raw_spec.replace(" ", "")
+        
+        #ERROR HANDLING 2 (lowercase)
+        raw_spec = raw_spec.lower()
+        
+        #turn into crude list
+        wald_spec_list = raw_spec.split(',') 
+        
+        wald_dic = {}
+        for x in wald_spec_list:
+            #if '=' in x:
+            wald_dic[x.split('=')[0]] = x.split('=')[1]
+        
+    
+        
+        
+        #this just used for error handling. make sure all declared
+        #vars are actually in the data set
+        temp_dic = {}
+        for var in self.reg_list[1:]:
+            temp_dic[var] = var
+        for key in wald_dic:
+            temp_err_var = temp_dic[key]
+        
+        #generate wald count so we know how many tests done on this model
+        self.wald_count += 1
+        
+        #array to list
+        my_exp = self.exp.tolist()
+        #my_exp = self.exp
+             
+        
+        #create R and q
+        R = np.eye(self.k)
+        q = np.zeros((self.k,1))
+        
+        #deal with q
+        #make a new dic, with instead of {c:3.14}, {0,3.14} where 0 is the index
+        num_wald_dic = {}
+        #key is like c, value is like 0
+        for key in wald_dic:
+            #if the var in the wald test is in 
+            #get indixes of where key appears in exp list
+            #since R and q organized in the same way
+            if key in my_exp:
+                num_wald_dic[my_exp.index(key)] = wald_dic[key]
+        
+        #update q
+        for numkey in num_wald_dic:
+            q[int(numkey),0] = float(num_wald_dic[numkey])
+ 
+        
+        #deal with R
+        #get a new list of exp
+        #my_expR = my_exp
+        my_expR = my_exp[:]
+        #my_expR = []
+        #for i in my_exp:
+        #    my_expR.append(i)
+        
+        #we get wald dic like {c:3.14}
+        for key in wald_dic:
+            if key in my_expR:
+                #remove so that we are left with a list of all vars NOT
+                #in the wald test
+                my_expR.remove(key)
+        
+        
+        #get the number of vars in wald test so we know how many restirctions
+        #used for df
+        res_num = len(my_expR)
+        
+        #we need of list of indices so we know what to delete from R matrix
+        deleteR = []
+        
+        
+        #for all vars NOT in wald test
+        for x in my_expR:
+            #add their index to our deleteR list
+            deleteR.append(my_exp.index(x))
+        
+
+
+        
+        #GO BACKWARDS and delete each index row from R and q
+        for delR in reversed(deleteR):
+            #axis=0 is rows
+            #axis=1 is cols
+            R = np.delete(R,delR,axis=0)
+            q = np.delete(q,delR,axis=0)
+       
+
+          
+        #beta = np.mat(self.beta).T
+        beta = np.mat(self.beta)
+
+        
+        #calculate wald (finally)
+        Rbetaq = R*beta - q
+            
+        sRXXR = self.u_2*R*(self.x.T*self.x).I*R.T
+        
+        #wald stat
+        W = Rbetaq.T*sRXXR.I*Rbetaq
+        
+        #f stat
+        F = W/(self.k - res_num)
+        
+        
+        
+        #change from matrix to string
+        W = np.squeeze(np.asarray(W))
+        F = np.squeeze(np.asarray(F))
+        
+        #double check types
+        W = float(W)
+        F = float(F)
+        
+        #get degress of freedom
+        chi_df = self.k - res_num
+        f_dfn  = self.k - res_num
+        f_dfd = self.n - self.k
+        
+        #get prob 
+        chi_prob = 1 - sp.stats.chi2.cdf(W, chi_df)
+        f_prob = 1 - sp.stats.f.cdf(F, f_dfn, f_dfd)
+        
+        #sigfigs
+        W = np.around(W, decimals = 4)
+        F = np.around(F, decimals = 4)
+        chi_prob = np.around(chi_prob, decimals = 4)
+        f_prob = np.around(f_prob, decimals = 4)
+        
+        return W, F, self.model_count, chi_prob, f_prob, chi_df, f_dfn, f_dfd, self.wald_count
+        
+        
+    def calc_plot(self):
+        
+        #generate wald count so we know how many tests done on this model
+        self.plot_count += 1
+        
+        y_hat = self.y_hat
+        y = self.y
+        
+        y_hat = np.squeeze(np.asarray(y_hat))
+        y = np.squeeze(np.asarray(y))
+        
+        y_hat = y_hat.tolist()
+        y = y.tolist()
+        
+        dem = 1
+        while self.n > dem:
+            dem = dem*10
+            if self.n < dem/2:
+                dem = dem/2
+            
+        interv = dem/10
+        
+        return y_hat, self.model_count, self.plot_count, y, self.n, interv
+
+    def calc_plot_res(self):
+        
+        #generate wald count so we know how many tests done on this model
+        self.plot_res_count += 1
+        
+        res = self.res[:]
+        
+        my_o = np.zeros(len(res))
+        res = np.squeeze(np.asarray(res))
+        
+        res = res.tolist()
+        my_o = my_o.tolist()
+        
+        dem = 1
+        while self.n > dem:
+            dem = dem*10
+            if self.n < dem/2:
+                dem = dem/2
+            
+        interv = dem/10
+        
+        return res, self.model_count, self.plot_res_count, my_o, self.n, interv
+        
+        
+        
