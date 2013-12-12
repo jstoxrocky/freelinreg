@@ -20,9 +20,7 @@ STEP 2: Estimating your model
 
 The FOMLRP accepts model specifications in the same way that EViews does. The dependent variable must always be first
 in the model specificantions. The variable 'c' is always used as the constant term, and the variable 't' is always 
-used as the time trend (the time trend currently does not support panel data). The position of 'c' and 't' do not matter,
-as long as they do not appear first. Logarithms, exponents, and lags are currently supported (lags of variables do not 
-support panel data).
+used as the time trend. The position of 'c' and 't' do not matter, as long as they do not appear first. Logarithms, exponents, and lags are supported.
 
 For example, if your data looks like this:
 
@@ -47,7 +45,7 @@ any of the following specifications are admissible:
 
 2.2 Panel and Pooled Cross-sectional data:
 
-The FOMLRP currently supports estimation of panel and pooled cross-sectional in the following way. Estimation of models spanning accross time periods and cross sections can cause problems for time trends and lagged variables. For this reason, extra caution must be used when mixing these variable with this type of data. To let the FOMLRP know that you are using data spanning both time and cross sections, the number of time periods associated with cross sections must be specified in square brackets at the end of the model specification.
+The FOMLRP supports estimation of panel and pooled cross-sectional in the following way. Estimation of models spanning accross time periods and cross sections can cause problems for time trends and lagged variables. For this reason, extra caution must be used when mixing these variable with this type of data. To let the FOMLRP know that you are using data spanning both time and cross sections, the number of time periods associated with cross sections must be specified in square brackets at the end of the model specification.
 
     y x1 x2 x3 ... [time_periods]
 
@@ -107,8 +105,8 @@ the appropriate model window and you're done! Alternatively, the residual series
 3.3 Obtaining Residuals Series:
 
 Obtaining residuals is easy. Residuals from each model are stored and can be accessed during subsequent model estimation. 
-For example residuals from the first model estimated (eq_1) are subsequently accessed using the variable "res_eq_1". 
-Similalrly, residulas from the second estimated equation are accessed by calling "res_eq_2".
+For example residuals from the first model estimated, eq_1, are subsequently accessed using the variable "res_eq_1". 
+Similalrly, residuals from the second estimated equation are accessed by calling "res_eq_2".
 
 3.4 Hausman Test:
 
@@ -129,4 +127,4 @@ Post estimation, the residuals are available and a Hausman test can be performed
 STEP 4: Donation
 **********************************************************************************************************************
 
-If you like this product, don't forget to donate!!
+If you like this product, please donate! I am unemployed!
